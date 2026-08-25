@@ -1,5 +1,5 @@
-# Render Blueprint
-# Deploy from the repository root. Fill the sync:false values in the Render dashboard.
+# Render Blueprint for the Render backend + Neon PostgreSQL + Vercel frontend setup.
+# Enter DATABASE_URL and the frontend URL values in the Render dashboard.
 services:
   - type: web
     name: smartsupport-api
@@ -12,16 +12,9 @@ services:
       - key: ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: smartsupport-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: smartsupport-redis
-          property: connectionString
+        sync: false
       - key: REDIS_ENABLED
-        value: "true"
+        value: "false"
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
@@ -43,23 +36,3 @@ services:
       - key: SEED_DATA
         value: "false"
 
-  - type: web
-    name: smartsupport-frontend
-    runtime: static
-    plan: free
-    buildCommand: npm ci && npm run build
-    staticPublishPath: ./frontend/dist
-    rootDir: frontend
-    envVars:
-      - key: VITE_API_BASE_URL
-        sync: false
-
-databases:
-  - name: smartsupport-db
-    plan: free
-    databaseName: smartsupport
-    user: smartuser
-
-  - name: smartsupport-redis
-    type: redis
-    plan: free
