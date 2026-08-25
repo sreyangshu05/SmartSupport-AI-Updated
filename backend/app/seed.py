@@ -99,7 +99,7 @@ def seed(db: Session) -> None:
 
     # -- Users/agents (from mockAgents) --------------------------------------
     users_data = [
-        ("admin@smart.support", "SmartSupport Admin", RoleEnum.ADMIN, settings.SEED_ADMIN_PASSWORD),
+        (settings.SEED_ADMIN_EMAIL, "SmartSupport Admin", RoleEnum.ADMIN, settings.SEED_ADMIN_PASSWORD),
         ("john@smart.support", "John Senior", RoleEnum.SENIOR_AGENT, "agent123"),
         ("emma@smart.support", "Emma Wilson", RoleEnum.AGENT, "agent123"),
     ]
@@ -260,7 +260,7 @@ def seed(db: Session) -> None:
 
     # -- Notifications -------------------------------------------------------
     if db.scalar(select(Notification).limit(1)) is None:
-        admin_id = str(users["admin@smart.support"].id)
+        admin_id = str(users[settings.SEED_ADMIN_EMAIL].id)
         db.add_all([
             Notification(user_id=admin_id, type="ticket.assigned",
                          title="Ticket assigned", message="TKT-000002 was assigned to Emma Wilson"),

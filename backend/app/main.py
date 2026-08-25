@@ -47,6 +47,16 @@ app.add_middleware(
 app.add_middleware(RateLimitMiddleware)
 
 
+@app.get("/")
+def root():
+    return {
+        "name": settings.APP_NAME,
+        "status": "ok",
+        "health": "/api/health",
+        "docs": "/docs",
+    }
+
+
 @app.middleware("http")
 async def request_context_logging(request: Request, call_next):
     request_id = str(uuid.uuid4())[:12]
