@@ -35,18 +35,6 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Sliding-window rate limiting (disabled automatically in test env).
-app.add_middleware(RateLimitMiddleware)
-
-
 @app.get("/")
 def root():
     return {
@@ -55,6 +43,19 @@ def root():
         "health": "/api/health",
         "docs": "/docs",
     }
+
+
+# Sliding-window rate limiting (disabled automatically in test env).
+app.add_middleware(RateLimitMiddleware)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.middleware("http")
